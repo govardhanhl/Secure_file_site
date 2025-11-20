@@ -1,0 +1,8 @@
+{
+  "original_name": "Report.pdf",
+  "timestamp": "20251119_190333",
+  "salt_b64": "g3MYwo/FAsNcmJGel+JOHQ==",
+  "iv_b64": "6ubMPMo77QKKX/MH",
+  "cipher_filename": "20251119_190333__Report.pdf.enc",
+  "note": "AES-GCM; PBKDF2-HMAC-SHA256; iterations=200000"
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Secure File Store (AES-GCM)</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Secure File Store (AES-GCM)</h1>
+      <p>Encrypt files with AES-GCM (PBKDF2-derived key). Demo — run locally.</p>
+    </header>
+
+    <main>
+      <!-- Encryption -->
+      <section class="card">
+        <h2>Encrypt a file</h2>
+        <form method="post" action="/encrypt" enctype="multipart/form-data">
+          <label>Choose file to encrypt</label>
+          <input type="file" name="file" required />
+          <label>Enter password</label>
+          <input type="password" name="password" placeholder="Strong password" required />
+          <div class="row">
+            <button type="submit" class="primary">Encrypt</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Decryption -->
+      <section class="card">
+        <h2>Decrypt a file</h2>
+        <form method="post" action="/decrypt" enctype="multipart/form-data">
+          <label>Upload encrypted file (.enc)</label>
+          <input type="file" name="enc_file" required />
+          <label>Upload metadata file (.meta.json)</label>
+          <input type="file" name="meta_file" accept="application/json" required />
+          <label>Enter password used to encrypt</label>
+          <input type="password" name="password_decrypt" required />
+          <div class="row">
+            <button type="submit" class="primary">Decrypt</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results / Links -->
+      <section id="results" class="card">
+        <h2>Results</h2>
+        <!-- Flash messages displayed by Flask -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, msg in messages %}
+                <div class="msg {{ category }}">{{ msg }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% if encrypted %}
+          <div class="links">
+            <p>Encrypted file: <a href="{{ url_for('download_file', fname=enc_file) }}">{{ enc_file }}</a></p>
+            <p>Metadata file: <a href="{{ url_for('download_file', fname=meta_file) }}">{{ meta_file }}</a></p>
+            <p>Save both files together. To decrypt upload both files back along with the password.</p>
+          </div>
+        {% endif %}
+
+        {% if decrypted %}
+          <div class="links">
+            <p>Decrypted file: <a href="{{ url_for('download_file', fname=decrypted_file) }}">{{ decrypted_file }}</a></p>
+          </div>
+        {% endif %}
+
+        <div class="info">
+          <p>Tip: Your encrypted files are stored in the <code>/uploads</code> folder while running this demo on your machine.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>Demo app — run locally. Do not expose to public networks without HTTPS and authentication.</small>
+    </footer>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
